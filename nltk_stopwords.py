@@ -3,8 +3,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize,RegexpTokenizer
 
 tokenizer = RegexpTokenizer(r'\w+')
-tokenizer.tokenize('Eighty-seven miles to go, yet.  Onward!')
-
 
 class Stopwords:
     def __init__(self,input_text):
