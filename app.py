@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restplus import fields, Api, Resource
-from nltk_stopwords import Stopwords
+from nltk_stopwords import Stopwords,Tfcompute
 import json
 
 app = Flask(__name__)
@@ -8,8 +8,8 @@ api = Api(app)
 
 raw_text = api.model('Rawtext', {'Rawtext' : fields.String('Your Input.')})
 
-@api.route('/language')
-class Language(Resource):
+@api.route('/Preprocessor')
+class Preprocessor(Resource):
     @api.expect(raw_text)
     def post(self):
         #data received from post request
@@ -19,10 +19,11 @@ class Language(Resource):
         #load the json to a string
         resp = json.loads(json_str)
         #Stopwords elimination begins here
-        class1=Stopwords(resp['Rawtext'])
-        tokenised_text=class1.eliminator()
-        return {'tokens' : tokenised_text}
-
+        class1=Stopwords(resp['Rawtext'].lower())
+        class2=Tfcompute(class1)
+        tokenised_text=class1.nontrivial_words()
+        wordfreqdict=class2.wordListToFreqDict()
+        return {'tokens' : tokenised_text,'term frequencies': wordfreqdict}
 
 if __name__ == '__main__':
     app.run(debug=True)
